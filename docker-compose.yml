@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      APP_SERVICE_NAME: flask-devops-showcase
+      APP_ENVIRONMENT: local
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3

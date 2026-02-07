@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-devops-showcase
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-devops-showcase
+  template:
+    metadata:
+      labels:
+        app: flask-devops-showcase
+    spec:
+      containers:
+        - name: web
+          image: flask-devops-showcase:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: APP_SERVICE_NAME
+              value: flask-devops-showcase
+            - name: APP_ENVIRONMENT
+              value: production
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
